@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZD ARTS — Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./blog.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo-badge">
+        <img src="./zdarts.png" alt="ZD ARTS Logo" />
+      </div>
+      <div><h1>ZD ARTS</h1></div>
+    </div>
+    <nav>
+      <a class="nav-link" href="./index.html">Home</a>
+      <a class="nav-link" href="./gallery.html">Gallery</a>
+      <a class="nav-link" href="./blog.html">Blog</a>
+      <a class="nav-link" href="./index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <h1 class="page-title">Blog Highlights</h1>
+
+  <div class="blog-list" id="blogList">
+    <div class="loading">Loading blogs...</div>
+  </div>
+
+  <footer>
+  <p>© ZD ARTS Gallery</p>
+  <p>Designed & Developed by Ramdinmawi Zadeng(dinzd145@gmail.com)</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAD0j20UUYETyC4FflYoW5gXZlgEdHiidQ",
+      authDomain: "zdart-70ce1.firebaseapp.com",
+      projectId: "zdart-70ce1",
+      storageBucket: "zdart-70ce1.appspot.com",
+      messagingSenderId: "969125577134",
+      appId: "1:969125577134:web:f8bc6c82c5f6a3f9ee483f",
+      measurementId: "G-W0KZRR52T2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadBlogs() {
+      const blogList = document.getElementById("blogList");
+      
+      try {
+        const q = query(collection(db, "blog"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          blogList.innerHTML = '<div class="error">No blogs found. Start creating!</div>';
+          return;
+        }
+
+        blogList.innerHTML = "";
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const container = document.createElement("div");
+          container.classList.add("blog-container");
+
+          container.innerHTML = `
+            <div class="blog-image" style="background-image: url('${data.imageUrl || 'https://via.placeholder.com/600x400'}');"></div>
+            <div class="blog-content-root">
+              <div class="blog-title">${data.title || "Untitled"}</div>
+              <div class="blog-desc-short">${data.shortDescription || data.description?.substring(0, 150) + "..." || ""}</div>
+              <div class="blog-desc-full">${data.description || "No description available."}</div>
+              <div class="blog-actions">
+                <button class="read-more-btn" onclick="toggleReadMore(this)">Read More</button>
+              </div>
+            </div>
+          `;
+
+          blogList.appendChild(container);
+        });
+      } catch (err) {
+        console.error("Error loading blogs:", err);
+        blogList.innerHTML = '<div class="error">Failed to load blogs. Please check console.</div>';
+      }
+    }
+
+  window.toggleReadMore = function (btn) {
+    const contentRoot = btn.closest('.blog-content-root');
+    const expanded = contentRoot.classList.contains('expanded');
+
+    if (expanded) {
+      contentRoot.classList.remove('expanded');
+      btn.textContent = "Read More";
+    } else {
+      contentRoot.classList.add('expanded');
+      btn.textContent = "Show Less";
+    }
+  };
+
+
+
+    loadBlogs();
+  </script>
+</body>
+</html>

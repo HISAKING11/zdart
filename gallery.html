@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZD ARTS — Gallery</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #090e18;
+      --panel: rgba(10,16,28,0.55);
+      --glass-border: rgba(59,130,246,0.12);
+      --accent: #3b82f6;
+      --accent-2: #60a5fa;
+      --muted: #94a3b8;
+      --text: #e6eef8;
+      --radius: 14px;
+      --glass-blur: 12px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(59,130,246,0.05), transparent 10%),
+        linear-gradient(180deg, #04060a 0%, var(--bg) 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 40; padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      background: rgba(6,10,16,0.40);
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      box-shadow: 0 6px 30px rgba(2,6,23,0.45);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 8px 30px rgba(59,130,246,0.12);
+    }
+
+    .brand h1 {
+      font-family: "Playfair Display", serif;
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.6px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-link {
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(59,130,246,0.06);
+      color: var(--accent);
+    }
+
+    .welcome-title {
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      font-size: 54px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(79, 106, 173, 0.825);
+      margin-top: 50px;
+      margin-bottom: 16px;
+      text-shadow: 0 8px 30px rgba(9, 6, 51, 0.393);
+    }
+
+    /* Gallery grid - centered cards */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 40px;
+      padding: 40px;
+      justify-content: center;
+      place-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Cards 450x450 */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(var(--glass-blur));
+      width: 450px;
+      height: 450px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: scale(0.6) translateY(40px);
+      animation: morphIn 1s ease forwards;
+    }
+
+    .card .card-image {
+      width: 450px;
+      height: 350px;
+      background-size: cover;
+      background-position: center;
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .card .card-content {
+      padding: 16px;
+      text-align: center;
+      flex-grow: 1;
+      overflow-wrap: break-word;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100px;
+    }
+
+    .card h3 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @keyframes morphIn {
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .gallery-button-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .gallery-btn {
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(rgba(59, 131, 246, 0.421), rgba(96,165,250,0.7));
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(59,130,246,0.15);
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .gallery-btn:hover {
+      background: linear-gradient(rgba(59, 131, 246, 0.629), rgba(96,165,250,0.7));
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .main {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 30px;
+      }
+      .card {
+        width: 300px;
+        height: 300px;
+      }
+      .card .card-image {
+        width: 300px;
+        height: 180px;
+      }
+      .welcome-title {
+        font-size: 36px;
+        margin-top: 30px;
+      }
+    }
+    footer {
+  text-align: center;
+  padding: clamp(16px, 3vw, 24px) clamp(12px, 2vw, 16px);
+  font-size: clamp(12px, 2vw, 14px);
+  color: var(--muted);
+  border-top: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+footer p {
+  margin: clamp(6px, 1vw, 8px) 0;
+  font-style: italic;
+  line-height: 1.6;
+}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo-badge">
+      <img src="./zdarts.png" alt="ZD ARTS Logo" style="width:40px;height:40px;border-radius:8px;object-fit:cover;" />
+    </div>
+    <div><h1>ZD ARTS</h1></div>
+  </div>
+  <nav>
+    <a class="nav-link" href="./index.html">Home</a>
+    <a class="nav-link" href="./gallery.html">Gallery</a>
+    <a class="nav-link" href="./blog.html">Blog</a>
+    <a class="nav-link" href="./index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<div class="welcome-title">
+  Gallery
+</div>
+
+<!-- Gallery grid -->
+<div class="main" id="gallery">
+  <!-- Cards will be injected here by JS below -->
+</div>
+
+<!--<div class="gallery-button-wrap">
+  <button class="gallery-btn"></button>
+</div>-->
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // 🔑 Firebase config (keep same as your project)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAD0j20UUYETyC4FflYoW5gXZlgEdHiidQ",
+    authDomain: "zdart-70ce1.firebaseapp.com",
+    projectId: "zdart-70ce1",
+    storageBucket: "zdart-70ce1.appspot.com",
+    messagingSenderId: "969125577134",
+    appId: "1:969125577134:web:f8bc6c82c5f6a3f9ee483f",
+    measurementId: "G-W0KZRR52T2"
+  };
+
+  // 🔥 Init Firebase + Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 📌 Fetch and render gallery
+  async function loadGallery() {
+    const mainContainer = document.getElementById('gallery');
+    mainContainer.innerHTML = '<p style="color:#94a3b8;text-align:center;">Loading images...</p>';
+
+    try {
+      const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        mainContainer.innerHTML = '<p style="color:#94a3b8;text-align:center;">No images uploaded yet.</p>';
+        return;
+      }
+
+      mainContainer.innerHTML = "";
+
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+
+        // Assume fields in Firestore: imageUrl (Cloudinary), title, description
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+          <div class="card-image" style="background-image:url('${data.imageUrl}'); background-size:cover; background-position:center; width:400px; height:400px; margin:auto;"></div>
+          <div class="card-content">
+            <h3>${data.title || "Untitled"}</h3>
+            <p>${data.description || ""}</p>
+          </div>
+        `;
+        mainContainer.appendChild(card);
+      });
+    } catch (err) {
+      console.error("Error loading gallery:", err);
+      mainContainer.innerHTML = '<p style="color:#f87171;text-align:center;">Failed to load images.</p>';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', loadGallery);
+</script>
+<footer>
+  <p>© ZD ARTS Gallery</p>
+  <p>Designed & Developed by Ramdinmawi Zadeng(dinzd145@gmail.com)</p>
+</footer>
+</body>
+</html>

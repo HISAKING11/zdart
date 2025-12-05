@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZD ARTS — Gallery</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAD0j20UUYETyC4FflYoW5gXZlgEdHiidQ",
+  authDomain: "zdart-70ce1.firebaseapp.com",
+  projectId: "zdart-70ce1",
+  storageBucket: "zdart-70ce1.appspot.com",
+  messagingSenderId: "969125577134",
+  appId: "1:969125577134:web:f8bc6c82c5f6a3f9ee483f",
+  measurementId: "G-W0KZRR52T2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadGallery() {
+  const mainContainer = document.querySelector('.main');
+  mainContainer.innerHTML = '<p style="color: #94a3b8; text-align:center;">Loading images...</p>';
+
+  try {
+    const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(2));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      mainContainer.innerHTML = '<p class="placeholder">No images uploaded yet.</p>';
+      return;
+    }
+
+    mainContainer.innerHTML = "";
+
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.innerHTML = `
+        <div class="card-image" style="background-image:url('${data.imageUrl}');"></div>
+        <div class="card-content">
+          <h3>${data.title}</h3>
+          <p>${data.description}</p>
+        </div>
+      `;
+      mainContainer.appendChild(card);
+    });
+  } catch (err) {
+    console.error(err);
+    mainContainer.innerHTML = '<p style="color:#f87171;text-align:center;">Failed to load images.</p>';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadGallery);
+</script>
+<!-- EmailJS scripts go AFTER the Firebase script -->
+
+
+
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo-badge" >
+      <img src="./zdarts.png" alt="ZD ARTS Logo" style="width:40px;height:40px;border-radius:8px;object-fit:cover;" />
+    </div>
+    <div><h1>ZD ARTS</h1></div>
+  </div>
+  <nav>
+    <a class="nav-link" href="./index.html">Home</a>
+    <a class="nav-link" href="./gallery.html">Gallery</a>
+    <a class="nav-link" href="./blog.html">Blog</a>
+    <a class="nav-link" href="#contact">Contact</a>
+  </nav>
+</header>
+
+<div class="welcome-title">
+  WELCOME TO ZD ARTS
+</div>
+
+<!-- Gallery grid -->
+<div class="main"></div>
+
+<div class="gallery-button-wrap">
+  <button class="gallery-btn" onclick="location.href='./gallery.html'">Gallery</button>
+</div>
+
+<!-- Contact Form Section below all content -->
+<div class="contact-section-wrapper" id="contact">
+  <section class="contact-section">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <label for="name">Name <small>*</small></label>
+      <input type="text" id="name" name="from_name" placeholder="Your Name" required />
+
+      <label for="email">Email <small>*</small></label>
+      <input type="email" id="email" name="reply_to" placeholder="Your Email" required />
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" />
+
+      <label for="message">Message <small>*</small></label>
+      <textarea id="message" name="message" rows="5" placeholder="Your message here..." required></textarea>
+
+      <button type="submit" id="sendMessageBtn">Send Message</button>
+      <p id="contactStatus" style="margin-top:10px;font-size:14px;"></p>
+    </form>
+  </section>
+  <div class="contact-image-fullscreen"></div>
+</div>
+<footer>
+  <p>© ZD ARTS Gallery</p>
+  <p>Designed & Developed by Ramdinmawi Zadeng(dinzd145@gmail.com)</p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function() {
+    emailjs.init({
+      publicKey: "FjxhvV6qJGGH1L7tj",
+    });
+  })();
+
+  const contactForm = document.getElementById("contactForm");
+  const statusEl = document.getElementById("contactStatus");
+  const sendBtn = document.getElementById("sendMessageBtn");
+
+  if (contactForm) {
+    // Main submit handler
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      statusEl.style.color = "#38bdf8";
+      statusEl.textContent = "Sending message...";
+
+      emailjs
+        .sendForm("service_rbn62vk", "template_rw5sd68", this)
+        .then(() => {
+          statusEl.style.color = "#22c55e";
+          statusEl.textContent = "Message sent successfully!";
+          contactForm.reset();
+        })
+        .catch((err) => {
+          console.error(err);
+          statusEl.style.color = "#ef4444";
+          statusEl.textContent = "Failed to send message. Please try again.";
+        });
+    });
+
+    // Optional: explicitly hook the button click (not strictly needed because type="submit")
+    if (sendBtn) {
+      sendBtn.addEventListener("click", function () {
+        // This will trigger the same submit handler above
+        contactForm.requestSubmit();
+      });
+    }
+  }
+</script>
+</body>
+</html>
